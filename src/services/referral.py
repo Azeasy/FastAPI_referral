@@ -104,7 +104,8 @@ async def delete_referral_code(cache: redis.Redis, user_id: int) -> dict[str, bo
 
 
 async def get_user_from_referral_code(cache:redis.Redis, code: str):
-    return cache.get(code)
+    if code:
+        return cache.get(code)
 
 
 async def create_referral(db: AsyncSession,

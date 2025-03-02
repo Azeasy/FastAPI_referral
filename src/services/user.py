@@ -10,6 +10,11 @@ from src.services.referral import create_referral, get_user_from_referral_code
 
 
 async def create_user(db: AsyncSession, cache:redis.Redis, user: UserCreate):
+    if user.referral_code:
+        user_id = await get_user_from_referral_code(cache, user.referral_code)
+        if not user_id:
+            raise HTTPException(status_code=404, detail=str("Referral doesn't exist"))
+
     result = await db.execute(select(User).where(User.email == user.email))
     existing_user = result.scalars().first()
     if existing_user:
@@ -23,7 +28,6 @@ async def create_user(db: AsyncSession, cache:redis.Redis, user: UserCreate):
 
     # Registering a referral here
     if user.referral_code:
-        user_id = await get_user_from_referral_code(cache, user.referral_code)
         await create_referral(db, user_id=db_user.id, referrer_id=user_id)
 
     return db_user
