@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:15
+    container_name: referral_db
+    restart: always
+    environment:
+      POSTGRES_USER: referral_user
+      POSTGRES_PASSWORD: referral_password
+      POSTGRES_DB: referral_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - referral_network
+
+  redis:
+    image: redis:7
+    container_name: referral_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - referral_network
+
+  app:
+    build:
+      context: .
+      args:
+        ENV: ${ENV:-production}  # Default to production if ENV is not set
+    container_name: referral_app
+    restart: always
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/src
+    networks:
+      - referral_network
+
+volumes:
+  postgres_data:
+
+networks:
+  referral_network:
+    driver: bridge
