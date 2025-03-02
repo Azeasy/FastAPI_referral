@@ -17,6 +17,20 @@ This project is a simple referral system built with FastAPI, SQLAlchemy, and Red
 
 ## Installation
 
+0. create `.env` file with the following variables:
+    ```.env
+   ENV=DEV
+   
+   DATABASE_URL=postgresql+asyncpg://referral_user:referral_password@db/referral_db
+   POSTGRES_PORT=5432
+   POSTGRES_HOST=localhost
+   REDIS_URL=redis://redis:6379/0
+   
+   SECRET_KEY=your_secret
+   ACCESS_TOKEN_EXPIRE_MINUTES=60
+   REFERRAL_DEFAULT_EXPIRY_DAYS=1
+    ```
+
 1. Clone the repository:
     ```sh
     git clone git@github.com:Azeasy/FastAPI_referral.git
