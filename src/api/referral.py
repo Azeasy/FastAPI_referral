@@ -22,7 +22,7 @@ async def get_my_referrals(
     return await get_referrals_by_user_id(db, current_user.id)
 
 
-@router.get("/get_by_id", response_model=list[ReferralResponse])
+@router.get("/get_by_id/", response_model=list[ReferralResponse])
 async def get_user_referrals_by_id(
         user_id: int,
         db:AsyncSession = Depends(get_db),
@@ -56,7 +56,7 @@ async def delete_my_referral_code(
     return await delete_referral_code(cache, current_user.id)
 
 
-@router.get("/code/get_by_email", response_model=ReferralCodeResponse)
+@router.get("/code/get_by_email/", response_model=ReferralCodeResponse)
 async def get_user_referral_code_by_email(
         email: str,
         cache = Depends(get_cache),

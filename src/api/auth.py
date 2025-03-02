@@ -9,7 +9,7 @@ from src.db.session import get_db
 router = APIRouter()
 
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/register/", response_model=UserResponse)
 async def register_user(
         user: UserCreate,
         db: AsyncSession = Depends(get_db),
@@ -19,7 +19,7 @@ async def register_user(
     return db_user
 
 
-@router.post("/login")
+@router.post("/login/")
 async def login(user: UserCreate, db: AsyncSession = Depends(get_db)):
     db_user = await authenticate_user(db, user.email, user.password)
     if not db_user:
