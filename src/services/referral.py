@@ -4,9 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 import uuid
 
+from sqlalchemy.orm import joinedload
+
 from src.core.config import settings
 from src.models.referral import Referral
 from src.models.user import User
+from src.schemas.referral import ReferralResponse
 
 
 async def generate_referral_code(cache: redis.Redis, user_id: int, referral) -> dict[str, str]:
@@ -123,6 +126,12 @@ async def get_referrals_by_user_id(db: AsyncSession, user_id: int):
     :return: List of referred users.
     """
     result = await db.execute(
-        select(Referral).where(Referral.referrer_id == user_id)
+        select(Referral).options(joinedload(Referral.referee))
+        .where(Referral.referrer_id == user_id)
     )
-    return result.scalars().all()
+    referrals = result.scalars().all()
+    return [ReferralResponse(
+        id=referral.id,
+        referrer_id=referral.referrer_id,
+        referee=referral.referee
+    ) for referral in referrals]

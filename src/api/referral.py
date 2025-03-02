@@ -22,6 +22,15 @@ async def get_my_referrals(
     return await get_referrals_by_user_id(db, current_user.id)
 
 
+@router.get("/get_by_id", response_model=list[ReferralResponse])
+async def get_user_referrals_by_id(
+        user_id: int,
+        db:AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    return await get_referrals_by_user_id(db, user_id)
+
+
 @router.post("/code/", response_model=ReferralCodeResponse)
 async def generate_my_referral_code(
         referral: ReferralCreate,

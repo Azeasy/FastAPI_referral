@@ -18,8 +18,6 @@ class ReferralCodeDeleteResponse(BaseModel):
 
 class ReferralResponse(BaseModel):
     id: int
-    referrer_id: int
-    referee_id: int
     referee: UserResponse | None = None
 
     class Config:
