@@ -22,6 +22,7 @@ This project is a simple referral system built with FastAPI, SQLAlchemy, and Red
    ENV=DEV
    
    DATABASE_URL=postgresql+asyncpg://referral_user:referral_password@db/referral_db
+   TEST_DATABASE_URL=postgresql+asyncpg://referral_user:referral_password@db/test_db
    POSTGRES_PORT=5432
    POSTGRES_HOST=localhost
    REDIS_URL=redis://redis:6379/0
