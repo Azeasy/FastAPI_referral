@@ -49,6 +49,8 @@ This project is a simple referral system built with FastAPI, SQLAlchemy, and Red
 - `GET /code/`: Retrieve the current user's referral code.
 - `DELETE /code/`: Delete the current user's referral code.
 - `GET /code/get_by_email`: Retrieve a referral code by email.
+- `GET /docs/`: Swagger UI
+- `GET /redoc/`: Redoc
 
 ## Environment Variables
 
