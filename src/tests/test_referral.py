@@ -50,14 +50,6 @@ async def test_register_with_referral_code(
         },
     )
 
-    print(response.content)
-    print('^ ^==^ ^' * 21)
-    print('\n\n\n')
-    print('^ ^==^ ^' * 21)
-    print('^ ^==^ ^' * 21)
-    print('\n\n\n')
-    print('\n\n\n')
-
     assert response.status_code == status.HTTP_200_OK
 
     response = await client.post(
@@ -66,9 +58,47 @@ async def test_register_with_referral_code(
         json={"expiry_in_days": 1},
     )
 
-    print(response.content)
-    print('^ ^==^ ^' * 21)
-    print('\n\n\n')
-    print('^ ^==^ ^' * 21)
-    print('^ ^==^ ^' * 21)
-    print('^ ^==^ ^' * 21)
+
+@pytest.mark.asyncio
+async def test_register_with_invalid_referral_code(client):
+    response = await client.post(
+        "/auth/register/",
+        json={
+            "email": "user10@example.com",
+            "password": "string10",
+            "referral_code": "invalid_code",
+        },
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json().get("detail") == "Invalid referral code"
+
+
+@pytest.mark.asyncio
+async def test_login_with_valid_credentials(client, create_test_user):
+    response = await client.post(
+        "/auth/login/",
+        json={
+            "email": create_test_user.email,
+            "password": "hashedpassword",
+        },
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    res = response.json()
+    assert "access_token" in res
+    assert res["token_type"] == "bearer"
+
+
+@pytest.mark.asyncio
+async def test_login_with_invalid_credentials(client):
+    response = await client.post(
+        "/auth/login/",
+        json={
+            "email": "nonexistent@example.com",
+            "password": "wrongpassword",
+        },
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json().get("detail") == "Invalid credentials"
