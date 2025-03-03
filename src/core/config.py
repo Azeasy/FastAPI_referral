@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     ENV: str
     DATABASE_URL: str
+    TEST_DATABASE_URL: str
     POSTGRES_HOST: str
     POSTGRES_PORT: int
     REDIS_URL: str

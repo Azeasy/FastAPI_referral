@@ -98,8 +98,9 @@ async def delete_referral_code(cache: redis.Redis, user_id: int) -> dict[str, bo
     :param user_id: ID of the user.
     :return: True if a code was deleted, False otherwise.
     """
+    code = cache.get(str(user_id))
     return {
-        'deleted': cache.delete(str(user_id))
+        'deleted': cache.delete(str(user_id)) and cache.delete(code)
     }
 
 

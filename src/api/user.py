@@ -6,6 +6,6 @@ from src.services.auth import get_current_user
 router = APIRouter()
 
 
-@router.post("/me/", response_model=UserResponse)
+@router.get("/me/", response_model=UserResponse)
 async def me(current_user: User = Depends(get_current_user)):
     return current_user
