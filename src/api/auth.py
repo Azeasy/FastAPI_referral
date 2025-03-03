@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.core.security import create_access_token
 from src.db.redis import get_cache
-from src.schemas.user import UserCreate, UserResponse
+from src.schemas.user import UserCreate, UserLogin, UserResponse
 from src.services.user import create_user, authenticate_user
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.session import get_db
@@ -9,7 +9,9 @@ from src.db.session import get_db
 router = APIRouter()
 
 
-@router.post("/register/", response_model=UserResponse)
+@router.post("/register/", response_model=UserResponse, responses={
+    404: {"description": "Not Found", "content": {"application/json": {"example": {"detail": "Referral doesn't exist"}}}},
+})
 async def register_user(
         user: UserCreate,
         db: AsyncSession = Depends(get_db),
@@ -20,7 +22,7 @@ async def register_user(
 
 
 @router.post("/login/")
-async def login(user: UserCreate, db: AsyncSession = Depends(get_db)):
+async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
     db_user = await authenticate_user(db, user.email, user.password)
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid credentials")

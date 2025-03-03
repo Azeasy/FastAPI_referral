@@ -1,11 +1,11 @@
 from pydantic import BaseModel
+from fastapi.params import Query, Annotated
 
-from src.models import User
 from src.schemas.user import UserResponse
 
 
 class ReferralCreate(BaseModel):
-    expiry_in_days: int
+    expiry_in_days: Annotated[int, Query(ge=1, default=1)]
 
 
 class ReferralCodeResponse(BaseModel):

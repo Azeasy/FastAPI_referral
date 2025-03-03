@@ -1,10 +1,16 @@
+from fastapi.params import Query, Annotated
 from pydantic import BaseModel, EmailStr
 
 
 class UserCreate(BaseModel):
     email: EmailStr
-    password: str
+    password: Annotated[str, Query(min_length=1)] = None
     referral_code: str | None = None
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
 
 class UserResponse(BaseModel):
